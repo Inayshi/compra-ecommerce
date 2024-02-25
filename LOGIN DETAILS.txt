@@ -1,0 +1,15 @@
+ADMIN PANEL LOGIN:
+
+Username: admin@admin.com
+Password: password
+
+USER LOGIN:
+
+Username: johnnydoe123@gmail.com
+Password: 12345
+
+PAYPAL EXPRESS:
+
+Email: sb-2hpx929072937@personal.example.com
+Password: S;d_v9Ey
+

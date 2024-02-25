@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Proxima+Nova:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Proxima Nova', sans-serif;
+      background-image: url('images/BACKGROUND.png');
+      background-size: cover; /* Adjust the background size as needed */
+      background-position: center; /* Adjust the background position as needed */
+      background-repeat: no-repeat; /* Prevent the background image from repeating */
+    }
+    .main-header {
+      background-color: #4CAF50;
+      color: white;
+    }
+    .navbar-brand {
+      font-weight: bold;
+      font-size: 24px;
+    }
+    .navbar-nav > li > a {
+      color: white;
+    }
+    .navbar-nav > li > a:hover,
+    .navbar-nav > li > a:focus {
+      background-color: #45a049;
+    }
+    .dropdown-menu {
+      background-color: #4CAF50;
+    }
+    .dropdown-menu > li > a {
+      color: white;
+    }
+    .dropdown-menu > li > a:hover,
+    .dropdown-menu > li > a:focus {
+      background-color: #45a049;
+    }
+    .navbar-form {
+      margin-top: 8px;
+    }
+    .user-image {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+    }
+
+    #navbar-search-input::placeholder {
+        color: white; /* Set the desired color for the placeholder text */
+    }
+  </style>
+</head>
+<body>
+
+<header class="main-header">
+<nav class="navbar navbar-static-top" style="background-color: #487B32;">
+  <div class="container">
+    <div class="navbar-header">
+        <a href="index.php" class="navbar-brand">
+        <img src="images/LOGO.png" alt="Compra Logo" class="img-responsive" style="max-height: 170%; max-width: 150%; margin-top: -8px;">
+        </a>
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse">
+          <i class="fa fa-bars"></i>
+        </button>
+      </div>
+
+      <div class="collapse navbar-collapse pull-left" id="navbar-collapse">
+        <ul class="nav navbar-nav">
+          <li><a href="index.php">HOME</a></li>
+          <li><a href="index.php #bottom">ABOUT US</a></li>
+          <li><a href="index.php #bottom">CONTACT US</a></li>
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">CATEGORY <span class="caret"></span></a>
+            <ul class="dropdown-menu" role="menu">
+              <?php
+                $conn = $pdo->open();
+                try {
+                  $stmt = $conn->prepare("SELECT * FROM category");
+                  $stmt->execute();
+                  foreach($stmt as $row){
+                    echo "<li><a href='category.php?category=".$row['cat_slug']."'>".$row['name']."</a></li>";
+                  }
+                }
+                catch(PDOException $e){
+                  echo "There is some problem in connection: " . $e->getMessage();
+                }
+                $pdo->close();
+              ?>
+            </ul>
+          </li>
+        </ul>
+        <form method="POST" class="navbar-form navbar-left" action="search.php">
+          <div class="input-group">
+              <input type="text" class="form-control" id="search-input" name="keyword" placeholder="Search for Product" required>
+              <span class="input-group-btn" id="searchBtn" style="display:none;">
+                  <button type="submit" class="btn btn-default btn-flat"><i class="fa fa-search"></i> </button>
+              </span>
+          </div>
+        </form>
+      </div>
+
+      <div class="navbar-custom-menu">
+        <ul class="nav navbar-nav">
+          <li class="dropdown messages-menu">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+              <i class="fa fa-shopping-cart"></i>
+              <span class="label label-success cart_count"></span>
+            </a>
+            <ul class="dropdown-menu">
+              <li class="header">You have <span class="cart_count"></span> item(s) in cart</li>
+              <li>
+                <ul class="menu" id="cart_menu">
+                </ul>
+              </li>
+              <li class="footer"><a href="cart_view.php">Go to Cart</a></li>
+            </ul>
+          </li>
+          <?php
+            if(isset($_SESSION['user'])){
+              $image = (!empty($user['photo'])) ? 'images/'.$user['photo'] : 'images/profile.jpg';
+              echo '
+                <li class="dropdown user user-menu">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                    <img src="'.$image.'" class="user-image" alt="User Image">
+                    <span class="hidden-xs">'.$user['firstname'].' '.$user['lastname'].'</span>
+                  </a>
+                  <ul class="dropdown-menu">
+                    <li class="user-header">
+                      <img src="'.$image.'" class="img-circle" alt="User Image">
+                      <p>
+                        '.$user['firstname'].' '.$user['lastname'].'
+                        <small>Member since '.date('M. Y', strtotime($user['created_on'])).'</small>
+                      </p>
+                    </li>
+                    <li class="user-footer">
+                      <div class="pull-left">
+                        <a href="profile.php" class="btn btn-default btn-flat">Profile</a>
+                      </div>
+                      <div class="pull-right">
+                        <a href="logout.php" class="btn btn-default btn-flat">Sign out</a>
+                      </div>
+                    </li>
+                  </ul>
+                </li>
+              ';
+            }
+            else{
+              echo "
+                <li><a href='login.php'>LOGIN</a></li>
+                <li><a href='signup.php'>SIGNUP</a></li>
+              ";
+            }
+          ?>
+        </ul>
+      </div>
+    </div>
+  </nav>
+</header>
+
+
+</body>
+</html>
